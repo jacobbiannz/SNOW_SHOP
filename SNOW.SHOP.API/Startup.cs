@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
+using SNOW.SHOP.API.Data;
 
 namespace SNOW.SHOP.API
 {
@@ -27,17 +29,37 @@ namespace SNOW.SHOP.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCompression();
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc()
+            .AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
+            services.AddEntityFrameworkSqlServer().AddDbContext<SnowAPIDBContext>();
+
+            services.AddScoped<IEntityMapper, SNOWAPIEntityMapper>();
+            services.AddScoped<ISnowAPIRepository, SnowAPIRepository>();
+
+            services.AddOptions();
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddSingleton<IConfiguration>(Configuration);
+
+         //   services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseResponseCompression();
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+          //  app.UseSwagger();
+
+           // app.UseSwaggerUi();
         }
     }
 }
