@@ -34,10 +34,10 @@ namespace SNOW.SHOP.API
             services.AddMvc()
             .AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
-            services.AddEntityFrameworkSqlServer().AddDbContext<SnowAPIDBContext>();
+            services.AddEntityFrameworkSqlServer().AddDbContext<SnowShopAPIDbContext>();
 
             services.AddScoped<IEntityMapper, SNOWAPIEntityMapper>();
-            services.AddScoped<ISnowAPIRepository, SnowAPIRepository>();
+            services.AddScoped<ISnowShopAPIRepository, SnowShopAPIRepository>();
 
             services.AddOptions();
 
@@ -57,9 +57,7 @@ namespace SNOW.SHOP.API
 
             app.UseMvc();
 
-          //  app.UseSwagger();
-
-           // app.UseSwaggerUi();
+          
         }
     }
 }
