@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.Data
 {
-    public class SnowAPIRepository : ISnowAPIRepository
+    public class SnowShopAPIRepository : ISnowShopAPIRepository
     {
-        private readonly SnowAPIDBContext DbContext;
+        private readonly SnowShopAPIDbContext DbContext;
         private Boolean Disposed;
 
-        public SnowAPIRepository(SnowAPIDBContext dbContext)
+        public SnowShopAPIRepository(SnowShopAPIDbContext dbContext)
         {
             DbContext = dbContext;
         }

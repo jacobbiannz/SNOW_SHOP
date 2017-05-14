@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.Data
 {
-    public interface ISnowAPIRepository : IDisposable
+    public interface ISnowShopAPIRepository : IDisposable
     {
         IQueryable<Product> GetProducts(Int32 pageSize, Int32 pageNumber, String name);
 

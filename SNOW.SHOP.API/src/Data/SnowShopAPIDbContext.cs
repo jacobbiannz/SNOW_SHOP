@@ -4,9 +4,9 @@ using System;
 
 namespace SNOW.SHOP.API.Data
 {
-    public class SnowAPIDBContext : Microsoft.EntityFrameworkCore.DbContext
+    public class SnowShopAPIDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public SnowAPIDBContext(IOptions<AppSettings> appSettings, IEntityMapper entityMapper)
+        public SnowShopAPIDbContext(IOptions<AppSettings> appSettings, IEntityMapper entityMapper)
         {
             ConnectionString = appSettings.Value.ConnectionString;
 
