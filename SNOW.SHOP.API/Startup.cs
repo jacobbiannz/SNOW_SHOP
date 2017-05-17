@@ -11,6 +11,7 @@ using Newtonsoft.Json.Serialization;
 using SNOW.SHOP.API.Data;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.Swagger;
+using SNOW.SHOP.API.src.Data;
 
 namespace SNOW.SHOP.API
 {
@@ -55,13 +56,15 @@ namespace SNOW.SHOP.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SnowShopAPIDbContext context)
         {
             app.UseResponseCompression();
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+            DbInitializer.Initialize(context);
 
             app.UseSwagger();
             
