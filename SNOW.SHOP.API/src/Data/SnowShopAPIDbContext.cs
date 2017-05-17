@@ -6,6 +6,7 @@ namespace SNOW.SHOP.API.Data
 {
     public class SnowShopAPIDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
+
         public SnowShopAPIDbContext(IOptions<AppSettings> appSettings, IEntityMapper entityMapper)
         {
             ConnectionString = appSettings.Value.ConnectionString;
