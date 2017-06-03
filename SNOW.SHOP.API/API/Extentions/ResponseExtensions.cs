@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using SNOW.SHOP.API.API.Response;
 
-namespace Golf.API.API.Extentions
+namespace SNOW.SHOP.API.API.Extentions
 {
     public static class ResponseExtensions
     {

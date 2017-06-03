@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SNOW.SHOP.API.Model
+namespace SNOW.SHOP.API.src.Model
 {
     public class Product : AuditableEntity<Product>
     {

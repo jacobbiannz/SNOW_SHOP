@@ -7,18 +7,19 @@ using SNOW.SHOP.API.API.Response;
 using SNOW.SHOP.API.API.ViewModels;
 using SNOW.SHOP.API.API.Extentions;
 using Microsoft.EntityFrameworkCore;
+using SNOW.SHOP.API.API.ViewModel;
 using SNOW.SHOP.API.src.Model;
 
 namespace SNOW.SHOP.API.API.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class CategoryController : Controller
     {
 
         private ISnowShopAPIRepository SnowShopAPIRepository;
 
 
-        public ProductController(ISnowShopAPIRepository repository)
+        public CategoryController(ISnowShopAPIRepository repository)
         {
             SnowShopAPIRepository = repository;
         }
@@ -30,19 +31,19 @@ namespace SNOW.SHOP.API.API.Controllers
             base.Dispose(disposing);
         }
 
-        // GET Production/Product
+        // GET Production/Category
         /// <summary>
-        /// Retrieves a list of Products
+        /// Retrieves a list of Categories
         /// </summary>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageNumber">Page number</param>
         /// <param name="name">Name</param>
         /// <returns>List response</returns>
         [HttpGet]
-        [Route("Products")]
-        public async Task<IActionResult> GetProducts(Int32? pageSize = 10, Int32? pageNumber = 1, String name = null)
+        [Route("Categories")]
+        public async Task<IActionResult> GetCategories(Int32? pageSize = 10, Int32? pageNumber = 1, String name = null)
         {
-            var response = new ListModelResponse<ProductViewModel>() as IListModelResponse<ProductViewModel>;
+            var response = new ListModelResponse<CategoryViewModel>() as IListModelResponse<CategoryViewModel>;
 
             try
             {
@@ -50,7 +51,7 @@ namespace SNOW.SHOP.API.API.Controllers
                 response.PageNumber = (Int32)pageNumber;
 
                 response.Model = await SnowShopAPIRepository
-                        .GetProducts(response.PageSize, response.PageNumber, name)
+                        .GetCategories(response.PageSize, response.PageNumber, name)
                         .Select(item => item.ToViewModel())
                         .ToListAsync();
 
@@ -65,20 +66,20 @@ namespace SNOW.SHOP.API.API.Controllers
             return response.ToHttpResponse();
         }
 
-        // GET Production/Product/5
+        // GET Production/Category/5
         /// <summary>
-        /// Retrieves a specific Product by id
+        /// Retrieves a specific Category by id
         /// </summary>
-        /// <param name="id">ProductID</param>
+        /// <param name="id">CategoryID</param>
         /// <returns>Single response</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct(Int32 id)
+        public async Task<IActionResult> GetCategory(Int32 id)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
             try
             {
-                var entity = await SnowShopAPIRepository.GetProductAsync(new Product { Id = id });
+                var entity = await SnowShopAPIRepository.GetCategoryAsync(new Category { Id = id });
 
                 response.Model = entity.ToViewModel();
             }
@@ -91,21 +92,21 @@ namespace SNOW.SHOP.API.API.Controllers
             return response.ToHttpResponse();
         }
 
-        // POST Production/Product/
+        // POST Production/Category/
         /// <summary>
         /// Creates a new user on Production catalog
         /// </summary>
-        /// <param name="value">Product entry</param>
+        /// <param name="value">Category entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        [Route("Product")]
-        public async Task<IActionResult> CreateProduct([FromBody]ProductViewModel value)
+        [Route("Category")]
+        public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel value)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
             try
             {
-                var entity = await SnowShopAPIRepository.AddProductAsync(value.ToEntity());
+                var entity = await SnowShopAPIRepository.AddCategoryAsync(value.ToEntity());
 
                 response.Model = entity.ToViewModel();
                 response.Message = "The data was saved successfully";
@@ -119,21 +120,21 @@ namespace SNOW.SHOP.API.API.Controllers
             return response.ToHttpResponse();
         }
 
-        // PUT Production/Product/5
+        // PUT Production/Category/5
         /// <summary>
-        /// Updates an existing Product
+        /// Updates an existing Category
         /// </summary>
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Product")]
-        public async Task<IActionResult> UpdateProduct([FromBody]ProductViewModel value)
+        [Route("Category")]
+        public async Task<IActionResult> UpdateCategory([FromBody]CategoryViewModel value)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
             try
             {
-                var entity = await SnowShopAPIRepository.UpdateProductAsync(value.ToEntity());
+                var entity = await SnowShopAPIRepository.UpdateCategoryAsync(value.ToEntity());
 
                 response.Model = entity.ToViewModel();
                 response.Message = "The record was updated successfully";
@@ -147,21 +148,21 @@ namespace SNOW.SHOP.API.API.Controllers
             return response.ToHttpResponse();
         }
 
-        // DELETE Production/Product/5
+        // DELETE Production/Category/5
         /// <summary>
-        /// Delete an existing Product
+        /// Delete an existing Category
         /// </summary>
-        /// <param name="id">Product ID</param>
+        /// <param name="id">Category ID</param>
         /// <returns>Single response</returns>
         [HttpDelete]
-        [Route("Product/{id}")]
-        public async Task<IActionResult> DeleteProduct(Int32 id)
+        [Route("Category/{id}")]
+        public async Task<IActionResult> DeleteCategory(Int32 id)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
             try
             {
-                var entity = await SnowShopAPIRepository.DeleteProductAsync(new Product { Id = id });
+                var entity = await SnowShopAPIRepository.DeleteCategoryAsync(new Category { Id = id });
 
                 response.Model = entity.ToViewModel();
                 response.Message = "The record was deleted successfully";

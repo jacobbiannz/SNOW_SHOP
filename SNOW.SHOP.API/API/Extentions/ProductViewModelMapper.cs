@@ -1,5 +1,5 @@
 ﻿using SNOW.SHOP.API.API.ViewModels;
-using SNOW.SHOP.API.Model;
+using SNOW.SHOP.API.src.Model;
 
 namespace SNOW.SHOP.API.API.Extentions
 {

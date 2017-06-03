@@ -1,4 +1,4 @@
-﻿using SNOW.SHOP.API.Model;
+﻿using SNOW.SHOP.API.src.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +18,15 @@ namespace SNOW.SHOP.API.Data
         Task<Product> UpdateProductAsync(Product changes);
 
         Task<Product> DeleteProductAsync(Product changes);
+
+        IQueryable<Category> GetCategories(Int32 pageSize, Int32 pageNumber, String name);
+
+        Task<Category> GetCategoryAsync(Category entity);
+
+        Task<Category> AddCategoryAsync(Category entity);
+
+        Task<Category> UpdateCategoryAsync(Category changes);
+
+        Task<Category> DeleteCategoryAsync(Category changes);
     }
 }
