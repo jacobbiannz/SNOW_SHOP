@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SNOW.SHOP.API.Model;
+using SNOW.SHOP.API.src.Model;
 using System;
 
 namespace SNOW.SHOP.API.Data
@@ -9,6 +9,8 @@ namespace SNOW.SHOP.API.Data
     {
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Company>  Companies { get; set; }
 
         public SnowShopAPIDbContext(IOptions<AppSettings> appSettings, IEntityMapper entityMapper)
         {

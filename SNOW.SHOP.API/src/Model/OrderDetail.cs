@@ -1,4 +1,4 @@
-﻿using SNOW.SHOP.API.Model;
+﻿using SNOW.SHOP.API.src.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

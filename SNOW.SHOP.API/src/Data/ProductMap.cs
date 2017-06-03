@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SNOW.SHOP.API.Model;
+using SNOW.SHOP.API.src.Model;
 
 
 namespace SNOW.SHOP.API.Data
