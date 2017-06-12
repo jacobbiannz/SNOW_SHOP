@@ -1,7 +1,7 @@
 ﻿using SNOW.SHOP.API.API.ViewModel;
 using System;
 
-namespace SNOW.SHOP.API.API.ViewModels
+namespace SNOW.SHOP.API.API.ViewModel
 {
     public class ProductViewModel
     {
@@ -15,6 +15,6 @@ namespace SNOW.SHOP.API.API.ViewModels
 
         public decimal MarketPrice { get; set; }
 
-        public CompanyViewModel Company { get; set; }
+        public string Company { get; set; }
     }
 }

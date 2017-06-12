@@ -12,7 +12,7 @@ using SNOW.SHOP.API.Data;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.Swagger;
 using SNOW.SHOP.API.src.Data;
-
+using AutoMapper;
 namespace SNOW.SHOP.API
 {
     public class Startup
@@ -34,6 +34,16 @@ namespace SNOW.SHOP.API
         {
             services.AddResponseCompression();
             // Add framework services.
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfileConfiguration());
+            });
+
+            var mapper = config.CreateMapper();
+
+            services.AddSingleton(mapper);
+
             services.AddMvc()
             .AddJsonOptions(a => a.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
             .AddXmlDataContractSerializerFormatters();
