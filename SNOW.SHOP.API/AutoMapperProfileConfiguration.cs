@@ -17,13 +17,11 @@ namespace SNOW.SHOP.API
         protected AutoMapperProfileConfiguration(string profileName)
         : base(profileName)
         {
-            CreateMap<ProductViewModel, Product>();
-            CreateMap<CompanyViewModel, Company>();
-            CreateMap<Company, CompanyViewModel>();
+            CreateMap<Company, CompanyViewModel>().ReverseMap();
+
             CreateMap<Product, ProductViewModel>()
-            .ForMember(dest=>dest.Company, opt=>opt.MapFrom(src=>src.Company.Name) );
+            .ForMember(dest=>dest.Company, opt=>opt.MapFrom(src=>src.CompanyId) );
             
-            CreateMap<CategoryViewModel, Category>().ReverseMap();
         }
     }
 }

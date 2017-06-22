@@ -11,6 +11,7 @@ namespace SNOW.SHOP.API.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Company>  Companies { get; set; }
+        public DbSet<Brand> Brands { get; set; }
 
         public SnowShopAPIDbContext(IOptions<AppSettings> appSettings, IEntityMapper entityMapper)
         {
