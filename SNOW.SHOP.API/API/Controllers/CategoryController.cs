@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SNOW.SHOP.API.Data;
 using SNOW.SHOP.API.API.Response;
-using SNOW.SHOP.API.API.ViewModels;
 using SNOW.SHOP.API.API.Extentions;
 using Microsoft.EntityFrameworkCore;
 using SNOW.SHOP.API.API.ViewModel;
@@ -99,8 +98,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Category entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        [Route("Category")]
-        public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel value)
+        [Route("Category"), Obsolete]
+        private async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel value)
         {
             var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
@@ -127,8 +126,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Category")]
-        public async Task<IActionResult> UpdateCategory([FromBody]CategoryViewModel value)
+        [Route("Category"), Obsolete]
+        private async Task<IActionResult> UpdateCategory([FromBody]CategoryViewModel value)
         {
             var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 
@@ -155,8 +154,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="id">Category ID</param>
         /// <returns>Single response</returns>
         [HttpDelete]
-        [Route("Category/{id}")]
-        public async Task<IActionResult> DeleteCategory(Int32 id)
+        [Route("Category/{id}"), Obsolete]
+        private async Task<IActionResult> DeleteCategory(Int32 id)
         {
             var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
 

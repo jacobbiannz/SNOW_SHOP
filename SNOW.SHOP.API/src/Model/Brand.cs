@@ -10,8 +10,8 @@ namespace SNOW.SHOP.API.src.Model
     {
         public string Name { get; set; }
 
-        public Company Company { get; set; }
+        public virtual Company Company { get; set; }
 
-        public ICollection<Product> AllProducts { get; set; }
+        public virtual ICollection<Product> AllProducts { get; set; }
     }
 }

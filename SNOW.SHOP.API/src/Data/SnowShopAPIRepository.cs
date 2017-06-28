@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SNOW.SHOP.API.src.Model;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace SNOW.SHOP.API.Data
     {
         private readonly SnowShopAPIDbContext DbContext;
         private Boolean Disposed;
+        private readonly IMapper _mapper;
 
-        public SnowShopAPIRepository(SnowShopAPIDbContext dbContext)
+        public SnowShopAPIRepository(SnowShopAPIDbContext dbContext, IMapper mapper)
         {
             DbContext = dbContext;
+            _mapper = mapper;
         }
 
         public void Dispose()

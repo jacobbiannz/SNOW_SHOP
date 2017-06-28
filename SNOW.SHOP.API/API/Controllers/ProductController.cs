@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SNOW.SHOP.API.Data;
 using SNOW.SHOP.API.API.Response;
-using SNOW.SHOP.API.API.ViewModels;
+using SNOW.SHOP.API.API.ViewModel;
 using SNOW.SHOP.API.API.Extentions;
 using Microsoft.EntityFrameworkCore;
 using SNOW.SHOP.API.src.Model;
+using AutoMapper;
 
 namespace SNOW.SHOP.API.API.Controllers
 {
@@ -16,11 +17,12 @@ namespace SNOW.SHOP.API.API.Controllers
     {
 
         private ISnowShopAPIRepository SnowShopAPIRepository;
+        private readonly IMapper _mapper;
 
-
-        public ProductController(ISnowShopAPIRepository repository)
+        public ProductController(ISnowShopAPIRepository repository, IMapper mapper)
         {
             SnowShopAPIRepository = repository;
+            _mapper = mapper;
         }
 
         protected override void Dispose(Boolean disposing)
@@ -51,7 +53,7 @@ namespace SNOW.SHOP.API.API.Controllers
 
                 response.Model = await SnowShopAPIRepository
                         .GetProducts(response.PageSize, response.PageNumber, name)
-                        .Select(item => item.ToViewModel())
+                        .Select(item => _mapper.Map<ProductViewModel>(item))
                         .ToListAsync();
 
                 response.Message = String.Format("Total of records: {0}", response.Model.Count());
@@ -98,8 +100,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        [Route("Product")]
-        public async Task<IActionResult> CreateProduct([FromBody]ProductViewModel value)
+        [Route("Product"),Obsolete]
+        private async Task<IActionResult> CreateProduct([FromBody]ProductViewModel value)
         {
             var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
 
@@ -126,8 +128,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Product")]
-        public async Task<IActionResult> UpdateProduct([FromBody]ProductViewModel value)
+        [Route("Product"), Obsolete]
+        private async Task<IActionResult> UpdateProduct([FromBody]ProductViewModel value)
         {
             var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
 
@@ -154,8 +156,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="id">Product ID</param>
         /// <returns>Single response</returns>
         [HttpDelete]
-        [Route("Product/{id}")]
-        public async Task<IActionResult> DeleteProduct(Int32 id)
+        [Route("Product/{id}"), Obsolete]
+        private async Task<IActionResult> DeleteProduct(Int32 id)
         {
             var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
 
