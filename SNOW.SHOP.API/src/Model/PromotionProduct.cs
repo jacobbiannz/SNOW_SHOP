@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class PromotionProduct : AuditableEntity<PromotionProduct>
+    public class PromotionProduct : Entity
     {
         public Promotion Promotion { get; set; }
         public Product Product { get; set; }

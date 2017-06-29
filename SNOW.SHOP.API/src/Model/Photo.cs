@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Photo : AuditableEntity<Photo>
+    public class Photo : Entity
     {
         public byte[] BinaryData { get; set; }
 

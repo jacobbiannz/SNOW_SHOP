@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Receipt : AuditableEntity<Receipt>
+    public class Receipt : Entity
     {
         public decimal Amount { get; set; }
 

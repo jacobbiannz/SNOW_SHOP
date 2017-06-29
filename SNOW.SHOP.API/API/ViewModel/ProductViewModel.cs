@@ -5,7 +5,7 @@ namespace SNOW.SHOP.API.API.ViewModel
 {
     public class ProductViewModel
     {
-        public Int32? ID { get; set; }
+        public int ID { get; set; }
 
         public String Name { get; set; }
 

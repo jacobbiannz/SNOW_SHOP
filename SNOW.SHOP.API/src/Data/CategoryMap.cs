@@ -14,6 +14,7 @@ namespace SNOW.SHOP.API.Data
             entity.HasKey(p => new { p.Id });
 
             entity.Property(p => p.Id).UseSqlServerIdentityColumn();
+            entity.HasOne(a => a.Company).WithMany(s => s.AllCategories).HasForeignKey(a => a.CompanyId);
         }
     }
 }

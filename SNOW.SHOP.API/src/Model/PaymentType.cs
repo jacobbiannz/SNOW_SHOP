@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class PaymentType : AuditableEntity<PaymentType>
+    public class PaymentType : Entity
     {
         public string Name { get; set; }
 

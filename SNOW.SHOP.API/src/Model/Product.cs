@@ -6,8 +6,15 @@ using System.Text;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Product : AuditableEntity<Product>
+    public class Product : Entity
     {
+        public Product()
+        {
+            AllPromotionProducts = new List<PromotionProduct>();
+            AllInventories = new List<Inventory>();
+            AllImageInfos = new List<ImageInfo>();
+            AllOrderDetails = new List<OrderDetail>();
+        }
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -18,15 +25,13 @@ namespace SNOW.SHOP.API.src.Model
 
         public int ClickCount { get; set; }
 
-        [ForeignKey("CompanyId")]
         public int CompanyId { get; set; }
         public virtual Company Company { get; set; }
 
-        [ForeignKey("CategoryId")]
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
-        [ForeignKey("BrandId")]
+       
         public int BrandId { get; set; }
         public virtual Brand Brand { get; set; }
 

@@ -51,7 +51,7 @@ namespace SNOW.SHOP.API
             services.AddEntityFrameworkSqlServer().AddDbContext<SnowShopAPIDbContext>();
 
             services.AddScoped<IEntityMapper, SNOWAPIEntityMapper>();
-            services.AddScoped<ISnowShopAPIRepository, SnowShopAPIRepository>();
+            services.AddScoped<ISnowShopAPIRepository, ProductRepository>();
 
             services.AddOptions();
 

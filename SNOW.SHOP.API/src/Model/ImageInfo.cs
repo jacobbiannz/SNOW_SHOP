@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class ImageInfo : AuditableEntity<ImageInfo>
+    public class ImageInfo : Entity
     {
         public string Name { get; set; }
         public string ContentType { get; set; }

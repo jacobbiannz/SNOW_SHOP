@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class User : AuditableEntity<User>
+    public class User : Entity
     {
     }
 }
