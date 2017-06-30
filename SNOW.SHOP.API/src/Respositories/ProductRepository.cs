@@ -13,8 +13,7 @@ namespace SNOW.SHOP.API.Data
 {
     public class ProductRepository : EntityRepository<Product>, IProductRepository
     {
-        private Boolean Disposed;
-       
+        
         public ProductRepository(SnowShopAPIDbContext dbContext):base(dbContext)
         {  
         }

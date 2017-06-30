@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Options;
 using SNOW.SHOP.API.src.Model;
 using System;
+using System.Linq;
 
 namespace SNOW.SHOP.API.Data
 {
@@ -33,6 +35,11 @@ namespace SNOW.SHOP.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             EntityMapper.MapEntities(modelBuilder);
 
             base.OnModelCreating(modelBuilder);

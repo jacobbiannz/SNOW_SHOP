@@ -23,10 +23,9 @@ namespace SNOW.SHOP.API.API.Controllers
         int page = 1;
         int pageSize = 4;
 
-        public ProductController(IProductRepository repository, IMapper mapper)
+        public ProductController(IProductRepository repository)
         {
             _productRepository = repository;
-            _mapper = mapper;
         }
 
        
@@ -39,9 +38,9 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="pageNumber">Page number</param>
         /// <param name="name">Name</param>
         /// <returns>List response</returns>
-       // [HttpGet]
-      //  [Route("Products")]
-        public IActionResult Get()
+        [HttpGet]
+        [Route("Products")]
+        public IActionResult GetProducts()
         {
             var pagination = Request.Headers["Pagination"];
 
@@ -59,7 +58,7 @@ namespace SNOW.SHOP.API.API.Controllers
 
 
             IEnumerable<Product> _products = _productRepository
-               .AllIncluding(s => s.CompanyId, s => s.Company)
+               .AllIncluding(s => s.Company)
                .OrderBy(s => s.Id)
                .Skip((currentPage - 1) * currentPageSize)
                .Take(currentPageSize)
@@ -84,7 +83,7 @@ namespace SNOW.SHOP.API.API.Controllers
         public async Task<IActionResult> GetProduct(int id)
         {
             Product _product = await _productRepository
-                 .GetSingleAsync(id);
+                 .GetSingleAsync(s => s.Id == id, s=>s.Company);
 
             if (_product != null)
             {

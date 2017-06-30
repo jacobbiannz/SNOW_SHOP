@@ -15,6 +15,10 @@ namespace SNOW.SHOP.API.API.ViewModel
 
         public decimal MarketPrice { get; set; }
 
-        public string Company { get; set; }
+        public CompanyViewModel Company { get; set; }
+
+       // public CategoryViewModel Category { get; set; }
+     //   public BrandViewModel Brand { get; set; }
+
     }
 }

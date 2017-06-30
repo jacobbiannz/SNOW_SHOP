@@ -26,21 +26,21 @@ namespace SNOW.SHOP.API.src.Model
         public int ClickCount { get; set; }
 
         public int CompanyId { get; set; }
-        public virtual Company Company { get; set; }
+        public Company Company { get; set; }
 
         public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public Category Category { get; set; }
 
        
         public int BrandId { get; set; }
-        public virtual Brand Brand { get; set; }
+        public Brand Brand { get; set; }
 
-        public virtual ICollection<PromotionProduct> AllPromotionProducts { get; set; }
+        public  ICollection<PromotionProduct> AllPromotionProducts { get; set; }
 
-        public virtual ICollection<Inventory> AllInventories { get; set; }
+        public  ICollection<Inventory> AllInventories { get; set; }
 
-        public virtual ICollection<ImageInfo> AllImageInfos { get; set; }
+        public  ICollection<ImageInfo> AllImageInfos { get; set; }
 
-        public virtual ICollection<OrderDetail> AllOrderDetails { get; set; }
+        public  ICollection<OrderDetail> AllOrderDetails { get; set; }
     }
 }

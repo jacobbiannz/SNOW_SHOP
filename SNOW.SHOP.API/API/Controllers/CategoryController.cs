@@ -4,10 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SNOW.SHOP.API.Data;
 using SNOW.SHOP.API.API.Response;
+using SNOW.SHOP.API.API.ViewModel;
 using SNOW.SHOP.API.API.Extentions;
 using Microsoft.EntityFrameworkCore;
-using SNOW.SHOP.API.API.ViewModel;
 using SNOW.SHOP.API.src.Model;
+using AutoMapper;
+using SNOW.SHOP.API.src.Abstract;
+using System.Collections.Generic;
+using SNOW.SHOP.API.API.Core;
 
 namespace SNOW.SHOP.API.API.Controllers
 {
@@ -15,24 +19,20 @@ namespace SNOW.SHOP.API.API.Controllers
     public class CategoryController : Controller
     {
 
-        private ISnowShopAPIRepository SnowShopAPIRepository;
+        private ICategoryRepository _categoryRepository;
+        int page = 1;
+        int pageSize = 4;
 
-
-        public CategoryController(ISnowShopAPIRepository repository)
+        public CategoryController(ICategoryRepository repository)
         {
-            SnowShopAPIRepository = repository;
+            _categoryRepository = repository;
         }
 
-        protected override void Dispose(Boolean disposing)
-        {
-            SnowShopAPIRepository?.Dispose();
-
-            base.Dispose(disposing);
-        }
+       
 
         // GET Production/Category
         /// <summary>
-        /// Retrieves a list of Categories
+        /// Retrieves a list of Products
         /// </summary>
         /// <param name="pageSize">Page size</param>
         /// <param name="pageNumber">Page number</param>
@@ -40,139 +40,154 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <returns>List response</returns>
         [HttpGet]
         [Route("Categories")]
-        public async Task<IActionResult> GetCategories(Int32? pageSize = 10, Int32? pageNumber = 1, String name = null)
+        public IActionResult GetCategories()
         {
+            var pagination = Request.Headers["Pagination"];
+
+            if (!string.IsNullOrEmpty(pagination))
+            {
+                string[] vals = pagination.ToString().Split(',');
+                int.TryParse(vals[0], out page);
+                int.TryParse(vals[1], out pageSize);
+            }
+
+            int currentPage = page;
+            int currentPageSize = pageSize;
+            var totalProducts = _categoryRepository.Count();
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+
+
+            IEnumerable<Category> _categories = _categoryRepository
+               .AllIncluding(s => s.Company, s=>s.AllProducts)
+               .OrderBy(s => s.Id)
+               .Skip((currentPage - 1) * currentPageSize)
+               .Take(currentPageSize)
+               .ToList();
+
+            Response.AddPagination(page, pageSize, totalProducts, totalPages);
+
             var response = new ListModelResponse<CategoryViewModel>() as IListModelResponse<CategoryViewModel>;
 
-            try
-            {
-                response.PageSize = (Int32)pageSize;
-                response.PageNumber = (Int32)pageNumber;
+            IEnumerable<CategoryViewModel> _categoriesVM = Mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(_categories);
 
-                response.Model = await SnowShopAPIRepository
-                        .GetCategories(response.PageSize, response.PageNumber, name)
-                        .Select(item => item.ToViewModel())
-                        .ToListAsync();
-
-                response.Message = String.Format("Total of records: {0}", response.Model.Count());
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response.ToHttpResponse();
+            return new OkObjectResult(_categoriesVM);
         }
 
-        // GET Production/Category/5
+        // GET Production/Product/5
         /// <summary>
-        /// Retrieves a specific Category by id
+        /// Retrieves a specific Product by id
         /// </summary>
-        /// <param name="id">CategoryID</param>
+        /// <param name="id">ProductID</param>
         /// <returns>Single response</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCategory(Int32 id)
+        [HttpGet("{id}", Name = "GetCategory")]
+        public async Task<IActionResult> GetCateogry(int id)
         {
-            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
+            Category _category = await _categoryRepository
+                 .GetSingleAsync(s => s.Id == id, s=>s.Company, s=>s.AllProducts);
 
-            try
+            if (_category != null)
             {
-                var entity = await SnowShopAPIRepository.GetCategoryAsync(new Category { Id = id });
-
-                response.Model = entity.ToViewModel();
+                CategoryViewModel _categoryVM = Mapper.Map<Category, CategoryViewModel>(_category);
+                return new OkObjectResult(_categoryVM);
             }
-            catch (Exception ex)
+            else
             {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
+                return NotFound();
             }
-
-            return response.ToHttpResponse();
         }
 
-        // POST Production/Category/
+        // POST Production/Product/
         /// <summary>
         /// Creates a new user on Production catalog
         /// </summary>
-        /// <param name="value">Category entry</param>
+        /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        [Route("Category"), Obsolete]
-        private async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel value)
+        
+        private async Task<IActionResult> Create([FromBody]CategoryViewModel category)
         {
-            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
-
-            try
+            if (!ModelState.IsValid)
             {
-                var entity = await SnowShopAPIRepository.AddCategoryAsync(value.ToEntity());
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The data was saved successfully";
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.ToString();
+                return BadRequest(ModelState);
             }
 
-            return response.ToHttpResponse();
+            Category _newCategory = Mapper.Map<CategoryViewModel, Category>(category);
+            _newCategory.CreatedDate = DateTime.Now;
+
+           await _categoryRepository.AddAsync(_newCategory);
+
+            // foreach (var userId in product.)
+            //      {
+            //         _newSchedule.Attendees.Add(new Attendee { UserId = userId });
+            //     }
+            //     _scheduleRepository.Commit();
+
+            category = Mapper.Map<Category, CategoryViewModel>(_newCategory);
+
+            CreatedAtRouteResult result = CreatedAtRoute("GetCategory", new { controller = "Category", id = category.ID }, category);
+            return result;
         }
 
-        // PUT Production/Category/5
+        // PUT Production/Product/5
         /// <summary>
-        /// Updates an existing Category
+        /// Updates an existing Product
         /// </summary>
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Category"), Obsolete]
-        private async Task<IActionResult> UpdateCategory([FromBody]CategoryViewModel value)
+        [Route("Category")]
+        private async Task<IActionResult> Put([FromBody]CategoryViewModel category)
         {
-            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
-
-            try
+            if (!ModelState.IsValid)
             {
-                var entity = await SnowShopAPIRepository.UpdateCategoryAsync(value.ToEntity());
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The record was updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
+                return BadRequest(ModelState);
             }
 
-            return response.ToHttpResponse();
+            Category _categoryDb = await _categoryRepository.GetSingleAsync(category.ID);
+
+            if (_categoryDb == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _categoryDb.Name = category.Name;
+                _categoryDb.CompanyId = _categoryDb.CompanyId;
+              
+
+
+
+
+               await _categoryRepository.CommitAsync();
+            }
+
+            category = Mapper.Map<Category, CategoryViewModel>(_categoryDb);
+
+            return new NoContentResult();
         }
 
-        // DELETE Production/Category/5
+        // DELETE Production/Product/5
         /// <summary>
-        /// Delete an existing Category
+        /// Delete an existing Product
         /// </summary>
-        /// <param name="id">Category ID</param>
+        /// <param name="id">Product ID</param>
         /// <returns>Single response</returns>
-        [HttpDelete]
-        [Route("Category/{id}"), Obsolete]
-        private async Task<IActionResult> DeleteCategory(Int32 id)
+        [HttpDelete("{id}", Name = "RemoveCategory")]
+        private async Task<IActionResult> Delete(int id)
         {
-            var response = new SingleModelResponse<CategoryViewModel>() as ISingleModelResponse<CategoryViewModel>;
+            Category _categoryDb = await _categoryRepository.GetSingleAsync(id);
 
-            try
+            if (_categoryDb == null)
             {
-                var entity = await SnowShopAPIRepository.DeleteCategoryAsync(new Category { Id = id });
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The record was deleted successfully";
+                return new NotFoundResult();
             }
-            catch (Exception ex)
+            else
             {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
-            }
 
-            return response.ToHttpResponse();
+               await _categoryRepository.DeleteAsync(_categoryDb);
+
+               return new NoContentResult();
+            }
         }
     }
 }

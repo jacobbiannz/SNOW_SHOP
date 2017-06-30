@@ -47,7 +47,7 @@ namespace SNOW.SHOP.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId");
+                    b.Property<int>("CompanyId");
 
                     b.Property<string>("CreatedBy");
 
@@ -698,18 +698,15 @@ namespace SNOW.SHOP.API.Migrations
                 {
                     b.HasOne("SNOW.SHOP.API.src.Model.Brand", "Brand")
                         .WithMany("AllProducts")
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BrandId");
 
                     b.HasOne("SNOW.SHOP.API.src.Model.Category", "Category")
                         .WithMany("AllProducts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("SNOW.SHOP.API.src.Model.Company", "Company")
                         .WithMany("AllProducts")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CompanyId");
                 });
 
             modelBuilder.Entity("SNOW.SHOP.API.src.Model.Promotion", b =>
