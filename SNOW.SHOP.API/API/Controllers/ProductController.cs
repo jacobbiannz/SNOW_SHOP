@@ -12,10 +12,12 @@ using AutoMapper;
 using SNOW.SHOP.API.src.Abstract;
 using System.Collections.Generic;
 using SNOW.SHOP.API.API.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SNOW.SHOP.API.API.Controllers
 {
     [Route("api/[controller]")]
+  //  [Authorize]
     public class ProductController : Controller
     {
 
