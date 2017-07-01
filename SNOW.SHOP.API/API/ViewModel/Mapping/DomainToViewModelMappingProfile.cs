@@ -24,13 +24,17 @@ namespace SNOW.SHOP.API.API.ViewModel.Mapping
              .ForMember(vm => vm.Name,
                   map => map.MapFrom(s => s.Name))
              .ForMember(vm => vm.Company,
-                  map => map.MapFrom(s => s.Company));
+                  map => map.MapFrom(s => s.Company))
+             .ForMember(vm => vm.AllProducts, s => s.ResolveUsing(src=> ConvertProducts(src.AllProducts)));
 
-          //  CreateMap<Brand, BrandViewModel>()
-         //   .ForMember(vm => vm.Name,
-          //       map => map.MapFrom(s => s.Name))
-          //  .ForMember(vm => vm.Company,
-          //       map => map.MapFrom(s => s.Company));
+            CreateMap<Brand, BrandViewModel>()
+            .ForMember(vm => vm.Name,
+                 map => map.MapFrom(s => s.Name))
+            .ForMember(vm => vm.AllProducts, map =>
+                      map.MapFrom(s => s.AllProducts.Select(a => a.Name)))
+            .ForMember(vm => vm.Company,
+                 map => map.MapFrom(s => s.Company))
+            .ForMember(vm => vm.AllProducts, s => s.ResolveUsing(src => ConvertProducts(src.AllProducts)));
 
             //   .ForMember(vm => vm.AllProducts, map =>
             //           map.MapFrom(s => s.AllProducts.Select(a => a.Name)));
@@ -44,9 +48,12 @@ namespace SNOW.SHOP.API.API.ViewModel.Mapping
                     map => map.MapFrom(s => s.MarketPrice))
                .ForMember(vm => vm.StockPrice,
                     map => map.MapFrom(s => s.StockPrice))
-               
-               .ForMember(vm => vm.Company,
-                    map => map.MapFrom(s => s.Company));
+               .ForMember(vm => vm.BrandInfo,
+                    map => map.MapFrom(s => new KeyValuePair<string, string>(s.Brand.Id.ToString(), s.Brand.Name)))
+                .ForMember(vm => vm.CategoryInfo,
+                    map => map.MapFrom(s => new KeyValuePair<string, string>(s.Category.Id.ToString(), s.Category.Name)))
+               .ForMember(vm => vm.CompanyInfo,
+                    map => map.MapFrom(s => new KeyValuePair<string, string>(s.Company.Id.ToString(), s.Company.Name)));
             //   .ForMember(vm => vm.Attendees, map =>
             //         map.MapFrom(s => s.Attendees.Select(a => a.UserId)));
 
@@ -67,6 +74,17 @@ namespace SNOW.SHOP.API.API.ViewModel.Mapping
             //         map.UseValue(Enum.GetNames(typeof(ScheduleType)).ToArray()));
 
 
+        }
+
+        private object ConvertProducts(ICollection<Product> src)
+        {
+            ICollection<KeyValuePair<string, string>> products = new Dictionary<string, string>();
+            foreach ( var p in src )
+            {
+                products.Add( new KeyValuePair<string, string>(p.Id.ToString(), p.Name));
+            }
+
+            return products;
         }
     }
 }

@@ -60,7 +60,7 @@ namespace SNOW.SHOP.API.API.Controllers
 
 
             IEnumerable<Product> _products = _productRepository
-               .AllIncluding(s => s.Company)
+               .AllIncluding(s => s.Company, s=>s.Category, s=>s.Brand)
                .OrderBy(s => s.Id)
                .Skip((currentPage - 1) * currentPageSize)
                .Take(currentPageSize)
@@ -69,10 +69,11 @@ namespace SNOW.SHOP.API.API.Controllers
             Response.AddPagination(page, pageSize, totalProducts, totalPages);
 
             var response = new ListModelResponse<ProductViewModel>() as IListModelResponse<ProductViewModel>;
-
+            
             IEnumerable<ProductViewModel> _productsVM = Mapper.Map<IEnumerable<Product>, IEnumerable<ProductViewModel>>(_products);
-
-            return new OkObjectResult(_productsVM);
+            
+             return new OkObjectResult(_productsVM);
+            
         }
 
         // GET Production/Product/5
@@ -85,7 +86,7 @@ namespace SNOW.SHOP.API.API.Controllers
         public async Task<IActionResult> GetProduct(int id)
         {
             Product _product = await _productRepository
-                 .GetSingleAsync(s => s.Id == id, s=>s.Company);
+                 .GetSingleAsync(s => s.Id == id, s=>s.Company, s=>s.Category, s=>s.Brand);
 
             if (_product != null)
             {

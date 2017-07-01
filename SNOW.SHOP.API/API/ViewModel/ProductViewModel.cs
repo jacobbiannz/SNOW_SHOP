@@ -1,5 +1,6 @@
 ﻿using SNOW.SHOP.API.API.ViewModel;
 using System;
+using System.Collections.Generic;
 
 namespace SNOW.SHOP.API.API.ViewModel
 {
@@ -15,10 +16,11 @@ namespace SNOW.SHOP.API.API.ViewModel
 
         public decimal MarketPrice { get; set; }
 
-        public CompanyViewModel Company { get; set; }
+        public KeyValuePair<String, String> CompanyInfo { get; set; }
 
-       // public CategoryViewModel Category { get; set; }
-     //   public BrandViewModel Brand { get; set; }
+        public KeyValuePair<String, String> CategoryInfo { get; set; }
+
+        public KeyValuePair<String, String> BrandInfo { get; set; }
 
     }
 }

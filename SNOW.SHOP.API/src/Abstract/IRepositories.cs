@@ -9,4 +9,6 @@ namespace SNOW.SHOP.API.src.Abstract
     public interface IProductRepository : IEntityRepository<Product> { }
 
     public interface ICategoryRepository : IEntityRepository<Category> { }
+
+    public interface IBrandRepository : IEntityRepository<Brand> { }
 }

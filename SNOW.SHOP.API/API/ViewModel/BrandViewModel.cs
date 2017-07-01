@@ -13,6 +13,6 @@ namespace SNOW.SHOP.API.API.ViewModel
 
         public CompanyViewModel Company { get; set; }
 
-        public ICollection<ProductViewModel> AllProducts { get; set; }
+        public ICollection<KeyValuePair<string, string>> AllProducts { get; set; }
     }
 }

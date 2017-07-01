@@ -11,6 +11,7 @@ namespace SNOW.SHOP.API.src.Model
         public string Name { get; set; }
 
         public int CompanyId { get; set; }
+
         public Company Company { get; set; }
 
         public ICollection<Product> AllProducts { get; set; }
