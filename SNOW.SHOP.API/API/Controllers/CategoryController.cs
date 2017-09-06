@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace SNOW.SHOP.API.API.Controllers
 {
     [Route("api/[controller]")]
-  //  [Authorize]
+    [Authorize]
     public class CategoryController : Controller
     {
 

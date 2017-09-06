@@ -13,6 +13,8 @@ using SNOW.SHOP.API.API.ViewModel.Mapping;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using SNOW.SHOP.API.API.Core;
+using System.Collections.Generic;
+
 namespace SNOW.SHOP.API
 {
     public class Startup
@@ -104,7 +106,12 @@ namespace SNOW.SHOP.API
                    });
              });
 
-            app.UseJwtBearerAuthentication();
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = "http://localhost:5000",
+                AllowedScopes = new List<string> { "snowApi" },
+                RequireHttpsMetadata = false
+            });
 
             app.UseMvc(routes =>
             {
