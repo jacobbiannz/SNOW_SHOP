@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Order : AuditableEntity<Order>
+    public class Order : Entity
     {
         public DateTime DT { get; set; }
 

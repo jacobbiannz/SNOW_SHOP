@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Size : AuditableEntity<Size>
+    public class Size : Entity
     {
         public string Name { get; set; }
 

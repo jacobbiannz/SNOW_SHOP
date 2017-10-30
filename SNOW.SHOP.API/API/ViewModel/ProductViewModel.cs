@@ -1,11 +1,12 @@
 ﻿using SNOW.SHOP.API.API.ViewModel;
 using System;
+using System.Collections.Generic;
 
-namespace SNOW.SHOP.API.API.ViewModels
+namespace SNOW.SHOP.API.API.ViewModel
 {
     public class ProductViewModel
     {
-        public Int32? ID { get; set; }
+        public int ID { get; set; }
 
         public String Name { get; set; }
 
@@ -15,6 +16,11 @@ namespace SNOW.SHOP.API.API.ViewModels
 
         public decimal MarketPrice { get; set; }
 
-        public CompanyViewModel Company { get; set; }
+        public KeyValuePair<String, String> CompanyInfo { get; set; }
+
+        public KeyValuePair<String, String> CategoryInfo { get; set; }
+
+        public KeyValuePair<String, String> BrandInfo { get; set; }
+
     }
 }

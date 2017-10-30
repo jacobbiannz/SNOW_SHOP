@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class Category : AuditableEntity<Category>
+    public class Category : Entity
     {
         public string Name { get; set; }
+
+        public int CompanyId { get; set; }
 
         public Company Company { get; set; }
 

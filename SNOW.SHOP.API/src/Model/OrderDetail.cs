@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SNOW.SHOP.API.src.Model
 {
-    public class OrderDetail : AuditableEntity<OrderDetail>
+    public class OrderDetail : Entity
     {
         public int Quality { get; set; }
     

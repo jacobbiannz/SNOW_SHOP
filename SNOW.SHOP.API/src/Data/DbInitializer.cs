@@ -23,9 +23,22 @@ namespace SNOW.SHOP.API.src.Data
                 new Company{Name="A.K", CreatedDate = DateTime.Now }
 
             };
+
             foreach (Company p in Companies)
             {
                 context.Companies.Add(p);
+            }
+            context.SaveChanges();
+
+            var Brands = new Brand[]
+            {
+                    new Brand{Name="LV", Company = Companies.FirstOrDefault(), CreatedDate = DateTime.Now }
+            };
+
+
+            foreach (Brand b in Brands)
+            {
+                context.Brands.Add(b);
             }
             context.SaveChanges();
 
@@ -48,13 +61,13 @@ namespace SNOW.SHOP.API.src.Data
 
             var Products = new Product[]
             {
-            new Product{Name="laptop",Description="laptop", Category= Categories.FirstOrDefault(), Company= Companies.FirstOrDefault(),
+            new Product{Name="laptop",Description="laptop", Brand=Brands.FirstOrDefault(), Category= Categories.FirstOrDefault(), Company= Companies.FirstOrDefault(),
                 MarketPrice =2.11M, StockPrice=3.11M,  CreatedDate = DateTime.Now },
-            new Product{Name="top",Description="top", Category= Categories.FirstOrDefault(), Company= Companies.FirstOrDefault(),
+            new Product{Name="top",Description="top", Brand=Brands.FirstOrDefault(), Category= Categories.FirstOrDefault(), Company= Companies.FirstOrDefault(),
                 MarketPrice =2.11M, StockPrice=3.11M, CreatedDate = DateTime.Now },
-            new Product{Name="t-shirt",Description="t-shirt",Category= Categories.LastOrDefault(), Company= Companies.LastOrDefault(),
+            new Product{Name="t-shirt",Description="t-shirt",Brand=Brands.FirstOrDefault(), Category= Categories.LastOrDefault(), Company= Companies.LastOrDefault(),
                 MarketPrice =2.11M, StockPrice=3.11M, CreatedDate = DateTime.Now },
-            new Product{Name="jeans",Description="jeans", Category= Categories.LastOrDefault(), Company= Companies.LastOrDefault(),
+            new Product{Name="jeans",Description="jeans", Brand=Brands.FirstOrDefault(), Category= Categories.LastOrDefault(), Company= Companies.LastOrDefault(),
                 MarketPrice =2.11M, StockPrice=3.11M, CreatedDate = DateTime.Now }
             };
 

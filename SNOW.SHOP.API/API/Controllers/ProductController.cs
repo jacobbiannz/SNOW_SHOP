@@ -4,31 +4,33 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SNOW.SHOP.API.Data;
 using SNOW.SHOP.API.API.Response;
-using SNOW.SHOP.API.API.ViewModels;
+using SNOW.SHOP.API.API.ViewModel;
 using SNOW.SHOP.API.API.Extentions;
 using Microsoft.EntityFrameworkCore;
 using SNOW.SHOP.API.src.Model;
+using AutoMapper;
+using SNOW.SHOP.API.src.Abstract;
+using System.Collections.Generic;
+using SNOW.SHOP.API.API.Core;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SNOW.SHOP.API.API.Controllers
 {
     [Route("api/[controller]")]
+  //  [Authorize]
     public class ProductController : Controller
     {
 
-        private ISnowShopAPIRepository SnowShopAPIRepository;
+        private IProductRepository _productRepository;
+        int page = 1;
+        int pageSize = 4;
 
-
-        public ProductController(ISnowShopAPIRepository repository)
+        public ProductController(IProductRepository repository)
         {
-            SnowShopAPIRepository = repository;
+            _productRepository = repository;
         }
 
-        protected override void Dispose(Boolean disposing)
-        {
-            SnowShopAPIRepository?.Dispose();
-
-            base.Dispose(disposing);
-        }
+       
 
         // GET Production/Product
         /// <summary>
@@ -40,29 +42,38 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <returns>List response</returns>
         [HttpGet]
         [Route("Products")]
-        public async Task<IActionResult> GetProducts(Int32? pageSize = 10, Int32? pageNumber = 1, String name = null)
+        public IActionResult GetProducts()
         {
+            var pagination = Request.Headers["Pagination"];
+
+            if (!string.IsNullOrEmpty(pagination))
+            {
+                string[] vals = pagination.ToString().Split(',');
+                int.TryParse(vals[0], out page);
+                int.TryParse(vals[1], out pageSize);
+            }
+
+            int currentPage = page;
+            int currentPageSize = pageSize;
+            var totalProducts = _productRepository.Count();
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+
+
+            IEnumerable<Product> _products = _productRepository
+               .AllIncluding(s => s.Company, s=>s.Category, s=>s.Brand)
+               .OrderBy(s => s.Id)
+               .Skip((currentPage - 1) * currentPageSize)
+               .Take(currentPageSize)
+               .ToList();
+
+            Response.AddPagination(page, pageSize, totalProducts, totalPages);
+
             var response = new ListModelResponse<ProductViewModel>() as IListModelResponse<ProductViewModel>;
-
-            try
-            {
-                response.PageSize = (Int32)pageSize;
-                response.PageNumber = (Int32)pageNumber;
-
-                response.Model = await SnowShopAPIRepository
-                        .GetProducts(response.PageSize, response.PageNumber, name)
-                        .Select(item => item.ToViewModel())
-                        .ToListAsync();
-
-                response.Message = String.Format("Total of records: {0}", response.Model.Count());
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
-            }
-
-            return response.ToHttpResponse();
+            
+            IEnumerable<ProductViewModel> _productsVM = Mapper.Map<IEnumerable<Product>, IEnumerable<ProductViewModel>>(_products);
+            
+             return new OkObjectResult(_productsVM);
+            
         }
 
         // GET Production/Product/5
@@ -71,24 +82,21 @@ namespace SNOW.SHOP.API.API.Controllers
         /// </summary>
         /// <param name="id">ProductID</param>
         /// <returns>Single response</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct(Int32 id)
+        [HttpGet("{id}", Name = "GetProduct")]
+        public async Task<IActionResult> GetProduct(int id)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            Product _product = await _productRepository
+                 .GetSingleAsync(s => s.Id == id, s=>s.Company, s=>s.Category, s=>s.Brand);
 
-            try
+            if (_product != null)
             {
-                var entity = await SnowShopAPIRepository.GetProductAsync(new Product { Id = id });
-
-                response.Model = entity.ToViewModel();
+                ProductViewModel _productVM = Mapper.Map<Product, ProductViewModel>(_product);
+                return new OkObjectResult(_productVM);
             }
-            catch (Exception ex)
+            else
             {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
+                return NotFound();
             }
-
-            return response.ToHttpResponse();
         }
 
         // POST Production/Product/
@@ -98,25 +106,29 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        [Route("Product")]
-        public async Task<IActionResult> CreateProduct([FromBody]ProductViewModel value)
+        
+        private async Task<IActionResult> Create([FromBody]ProductViewModel product)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
-
-            try
+            if (!ModelState.IsValid)
             {
-                var entity = await SnowShopAPIRepository.AddProductAsync(value.ToEntity());
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The data was saved successfully";
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.ToString();
+                return BadRequest(ModelState);
             }
 
-            return response.ToHttpResponse();
+            Product _newProduct = Mapper.Map<ProductViewModel, Product>(product);
+            _newProduct.CreatedDate = DateTime.Now;
+
+           await _productRepository.AddAsync(_newProduct);
+
+            // foreach (var userId in product.)
+            //      {
+            //         _newSchedule.Attendees.Add(new Attendee { UserId = userId });
+            //     }
+            //     _scheduleRepository.Commit();
+
+            product = Mapper.Map<Product, ProductViewModel>(_newProduct);
+
+            CreatedAtRouteResult result = CreatedAtRoute("GetProduct", new { controller = "Product", id = product.ID }, product);
+            return result;
         }
 
         // PUT Production/Product/5
@@ -126,25 +138,36 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Product")]
-        public async Task<IActionResult> UpdateProduct([FromBody]ProductViewModel value)
+        [Route("Product"), Obsolete]
+        private async Task<IActionResult> Put([FromBody]ProductViewModel product)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
-
-            try
+            if (!ModelState.IsValid)
             {
-                var entity = await SnowShopAPIRepository.UpdateProductAsync(value.ToEntity());
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The record was updated successfully";
-            }
-            catch (Exception ex)
-            {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
+                return BadRequest(ModelState);
             }
 
-            return response.ToHttpResponse();
+            Product _productDb = await _productRepository.GetSingleAsync(product.ID);
+
+            if (_productDb == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _productDb.Name = product.Name;
+                _productDb.Description = product.Description;
+                _productDb.StockPrice = product.StockPrice;
+                _productDb.MarketPrice = product.MarketPrice;
+
+
+
+
+               await _productRepository.CommitAsync();
+            }
+
+            product = Mapper.Map<Product, ProductViewModel>(_productDb);
+
+            return new NoContentResult();
         }
 
         // DELETE Production/Product/5
@@ -153,26 +176,22 @@ namespace SNOW.SHOP.API.API.Controllers
         /// </summary>
         /// <param name="id">Product ID</param>
         /// <returns>Single response</returns>
-        [HttpDelete]
-        [Route("Product/{id}")]
-        public async Task<IActionResult> DeleteProduct(Int32 id)
+        [HttpDelete("{id}", Name = "RemoveProduct")]
+        private async Task<IActionResult> Delete(int id)
         {
-            var response = new SingleModelResponse<ProductViewModel>() as ISingleModelResponse<ProductViewModel>;
+            Product _productDb = await _productRepository.GetSingleAsync(id);
 
-            try
+            if (_productDb == null)
             {
-                var entity = await SnowShopAPIRepository.DeleteProductAsync(new Product { Id = id });
-
-                response.Model = entity.ToViewModel();
-                response.Message = "The record was deleted successfully";
+                return new NotFoundResult();
             }
-            catch (Exception ex)
+            else
             {
-                response.DidError = true;
-                response.ErrorMessage = ex.Message;
-            }
 
-            return response.ToHttpResponse();
+               await _productRepository.DeleteAsync(_productDb);
+
+               return new NoContentResult();
+            }
         }
     }
 }
