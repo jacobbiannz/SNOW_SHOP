@@ -105,8 +105,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPost]
-        
-        private async Task<IActionResult> Create([FromBody]CategoryViewModel category)
+        [Route("CreateCategory")]
+        public async Task<IActionResult> CreateCategory([FromBody]CategoryViewModel category)
         {
             if (!ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace SNOW.SHOP.API.API.Controllers
 
             Category _newCategory = Mapper.Map<CategoryViewModel, Category>(category);
             _newCategory.CreatedDate = DateTime.Now;
-
+         
            await _categoryRepository.AddAsync(_newCategory);
 
             // foreach (var userId in product.)
@@ -126,7 +126,7 @@ namespace SNOW.SHOP.API.API.Controllers
 
             category = Mapper.Map<Category, CategoryViewModel>(_newCategory);
 
-            CreatedAtRouteResult result = CreatedAtRoute("GetCategory", new { controller = "Category", id = category.ID }, category);
+            CreatedAtRouteResult result =  CreatedAtRoute("GetCategory", new { controller = "Category", id = category.ID }, category);
             return result;
         }
 
@@ -137,8 +137,8 @@ namespace SNOW.SHOP.API.API.Controllers
         /// <param name="value">Product entry</param>
         /// <returns>Single response</returns>
         [HttpPut]
-        [Route("Category")]
-        private async Task<IActionResult> Put([FromBody]CategoryViewModel category)
+        [Route("UpdateCategory")]
+        public async Task<IActionResult> UpdateCategory([FromBody]CategoryViewModel category)
         {
             if (!ModelState.IsValid)
             {
@@ -163,9 +163,17 @@ namespace SNOW.SHOP.API.API.Controllers
                await _categoryRepository.CommitAsync();
             }
 
-            category = Mapper.Map<Category, CategoryViewModel>(_categoryDb);
+            try
+            {
+                category = Mapper.Map<Category, CategoryViewModel>(_categoryDb);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.InnerException);
+            }
 
-            return new NoContentResult();
+            CreatedAtRouteResult result = CreatedAtRoute("GetCategory", new { controller = "Category", id = category.ID }, category);
+            return result;
         }
 
         // DELETE Production/Product/5

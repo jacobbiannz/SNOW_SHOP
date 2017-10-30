@@ -23,8 +23,8 @@ namespace SNOW.SHOP.API.API.ViewModel.Mapping
             CreateMap<Category, CategoryViewModel>()
              .ForMember(vm => vm.Name,
                   map => map.MapFrom(s => s.Name))
-             .ForMember(vm => vm.Company,
-                  map => map.MapFrom(s => s.Company))
+             //.ForMember(vm => vm.Company,
+             //     map => map.MapFrom(s => s.Company))
              .ForMember(vm => vm.AllProducts, s => s.ResolveUsing(src=> ConvertProducts(src.AllProducts)));
 
             CreateMap<Brand, BrandViewModel>()
