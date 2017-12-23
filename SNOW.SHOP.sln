@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SNOW.SHOP.API", "SNOW.SHOP.API\SNOW.SHOP.API.csproj", "{261B5840-EA9E-49EF-B927-D1CA101CB2D7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SNOWSHOPAPITest", "SNOWSHOPAPITest\SNOWSHOPAPITest.csproj", "{E25489BB-6520-4B8E-BE9D-F2D40CF03C3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SNOW.IdentityServer", "SNOW.IdentityServer\SNOW.IdentityServer.csproj", "{C5E75C14-8A56-4D5C-8ED4-7F0BD66FD73E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SNOW.IdentityServer", "..\SnowIdentityServer\SnowIdentityServer\SNOW.IdentityServer.csproj", "{DA869B90-97B7-44FF-8EA0-3EBBEB07F13D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{E25489BB-6520-4B8E-BE9D-F2D40CF03C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E25489BB-6520-4B8E-BE9D-F2D40CF03C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E25489BB-6520-4B8E-BE9D-F2D40CF03C3A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5E75C14-8A56-4D5C-8ED4-7F0BD66FD73E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5E75C14-8A56-4D5C-8ED4-7F0BD66FD73E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5E75C14-8A56-4D5C-8ED4-7F0BD66FD73E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5E75C14-8A56-4D5C-8ED4-7F0BD66FD73E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA869B90-97B7-44FF-8EA0-3EBBEB07F13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA869B90-97B7-44FF-8EA0-3EBBEB07F13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA869B90-97B7-44FF-8EA0-3EBBEB07F13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA869B90-97B7-44FF-8EA0-3EBBEB07F13D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
